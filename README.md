@@ -3,7 +3,7 @@ Programa atspausdina pateiktam faile, esančius visus daugiau negu vieną kartą
 
 ## Įdiegimas (Unix kompiuteryje) naudojant `g++`kompiliatorių 
 
-- `git clone https://github.com/miKiau/Antra-uzduotis.git`
-- `cd Antra-uzduotis`
+- `git clone https://github.com/miKiau/Papildoma.git`
+- `cd Papildoma`
 - `make main`
 - `./main` 
