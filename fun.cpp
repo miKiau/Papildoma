@@ -24,36 +24,33 @@ void read_file(const std::string& file_name, svector& vec)
     if (!from.is_open()) throw std::runtime_error("File does not exist. Please try again");
     std::string temp;
     while (!from.eof()) {
-        getline(from, temp);
+        getline(from, temp, '\n');
         if (temp.empty() || temp == " " || temp == "\n") continue;
         vec.push_back(temp);
     }
     from.close();
-    vec.shrink_to_fit();
 }
-void find_all_occurrences(std::vector<size_t>& positions, const std::string& data, const std::string& to_search)
+void find_all_occurrences(std::vector<int>& positions, const std::string& data, const std::string& to_search)
 {
     size_t pos = data.find(to_search);
-    while(pos != std::string::npos) {
+    while (pos != std::string::npos) {
         positions.push_back(pos);
         pos = data.find(to_search, pos + to_search.size());
     }
 }
-void erase_duplicate_url_positions(std::vector<size_t>& positions)
+void erase_duplicate_url_positions(std::vector<int>& positions)
 {
     std::vector<size_t> erase_these;
     std::string tmp = "https://";
     erase_these.reserve(N);
     // std::size("https://") - 1 == 8
     for (int i = 0, until = positions.size(); i < until - 1; ++i)
-        if (positions.at(i + 1) - positions.at(i) == tmp.size()) {
-          std::cout << "BOO\n";
+        if (positions.at(i + 1) - positions.at(i) == tmp.size())
           erase_these.push_back(i + 1);
-        }
     for (const auto& i : erase_these)
         positions.erase(positions.begin() + i);
 }
-void find_url_positions(std::vector<size_t>& positions, const std::string& line)
+void find_url_positions(std::vector<int>& positions, const std::string& line)
 {
     // Finds all positions of https// and www. substrings.
     find_all_occurrences(positions, line, "https://");
@@ -65,7 +62,23 @@ void find_url_positions(std::vector<size_t>& positions, const std::string& line)
       erase_duplicate_url_positions(positions);
     }
 }
-void get_all_urls_from_string(const std::vector<size_t>& positions, const std::string& line, svector& urls)
+void cut_string_length(std::string& line) {
+    bool change = false;
+    for (auto& e : line)
+    {
+        for (const auto& f : evil_for_url)
+            if (f == e) {
+                change = true;
+                break;
+            }
+        if (change) {
+            size_t from = line.find(e);
+            line.erase(line.begin() + from, line.end());
+            break;
+        }
+    }
+}
+void get_all_urls_from_string(const std::vector<int>& positions, const std::string& line, svector& urls)
 {
     std::string tmp, url;
     for (const auto& pos : positions) {
@@ -76,15 +89,17 @@ void get_all_urls_from_string(const std::vector<size_t>& positions, const std::s
         // output the first string from tmp
         std::stringstream from(tmp);
         from >> url;
+        cut_string_length(url);
+        // cut url length
         urls.push_back(url);
     }
 }
-void check_for_urls(const svector& vec, svector& urls)
+void check_for_urls(const svector& lines, svector& urls)
 {
-    std::vector<size_t> positions;
+    std::vector<int> positions;
+    urls.reserve(N);
     positions.reserve(N);
-    for (const auto& line : vec)
-    {
+    for (const auto& line : lines) {
         find_url_positions(positions, line);
         get_all_urls_from_string(positions, line, urls);
         if (!positions.empty()) positions.clear();
