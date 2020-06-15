@@ -6,7 +6,6 @@
 #include "header.h"
 
 int main() try {
-    std::cout << "Recomendation: don't input a file with a huge number of lines.\n";
     const std::string file_name = get_file();
     svector lines, urls;
 
@@ -16,16 +15,6 @@ int main() try {
 
     my_map words;
     read_all_words(words, lines);
-
-    // std::cout << "\nShould the output be printed to the file? (y/n)\n";
-    // std::string tmp;
-    // while (true) {
-    //     std::cin >> tmp;
-    //     std::cin.ignore(256, '\n');
-    //     std::cin.clear();
-    //     if (tmp != "y" || tmp != "n") break;
-    // }
-    // const std::string file_to = (tmp == y )? "NULL" : get_file();
 
     std::cout << "\nThe output's name.";
     const std::string file_to = get_file();
