@@ -16,22 +16,24 @@
 #include <sstream>
 
 // Initial size of vector
-#define N 10000
+#define N 10000000
 // fill symbol in the output
-#define fill_symbol 'X'
+#define fill_symbol 'O'
 // Symbols, which i'll change to ' '
-const char evil[] = "–,<.>/?;:\"[{]}=+-_)(*&^%$#@!~`0123456789";
+const char evil[] = "–,<.>/?;:|\'\"\\[{]}=+-_)(*&^%$#@!~`0123456789";
+const char evil_for_url[] = "<>;\"\'(),\\";
 
 typedef std::map<std::string, std::vector<int>> my_map;
 typedef std::vector<std::string> svector;
 
 std::string get_file();
 void read_file(const std::string& file_name, svector& vec);
-void find_all_occurrences(std::vector<size_t>& positions, const std::string& data, const std::string& toSearch);
-void erase_duplicate_url_positions(std::vector<size_t>& positions);
-void find_url_positions(std::vector<size_t>& positions, const std::string& line);
-void get_all_urls_from_string(const std::vector<size_t>& positions, const std::string& line, svector& urls);
-void check_for_urls(const svector& vec, svector& urls);
+void find_all_occurrences(std::vector<int>& positions, const std::string& data, const std::string& toSearch);
+void erase_duplicate_url_positions(std::vector<int>& positions);
+void find_url_positions(std::vector<int>& positions, const std::string& line);
+void cut_string_length(std::string& line);
+void get_all_urls_from_string(const std::vector<int>& positions, const std::string& line, svector& urls);
+void check_for_urls(const svector& lines, svector& urls);
 void change_special_symbols(std::string& line);
 void change_all_lines (svector& vec);
 bool count_repeats(const int& counter, const my_map& words, const std::pair<my_map::iterator, bool>& result);
